@@ -3,216 +3,394 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Smart Affiliate Finder</title>
+  <title>Affiliate Smart Site</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #0f172a, #1e293b);
-      color: #f8fafc;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
+    /* Estilo das abas tipo pasta de arquivo */
+    .file-tab {
+      position: relative;
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      border-radius: 12px 12px 0 0;
+      margin-right: 4px;
+      transition: all 0.3s ease;
+      transform: translateY(4px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .file-tab.active {
+      background: white;
+      transform: translateY(0);
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+    
+    .file-tab:not(.active):hover {
+      transform: translateY(2px);
+      background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
     }
 
-    .container {
-      text-align: center;
-      width: 90%;
-      max-width: 1200px;
-    }
-
-    .search-box input {
-      width: 80%;
-      padding: 12px;
-      border-radius: 25px;
-      border: none;
-      font-size: 1rem;
-      margin-bottom: 20px;
-      outline: none;
-    }
-
-    .categories {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      overflow-y: auto;
-      height: 60vh;
-      padding: 10px;
-    }
-
-    .category {
-      display: flex;
-      overflow-x: auto;
-      gap: 10px;
-      padding: 10px;
+    /* Rolagem horizontal suave */
+    .horizontal-scroll {
       scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: #cbd5e1 #f1f5f9;
+    }
+    
+    .horizontal-scroll::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    .horizontal-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 3px;
+    }
+    
+    .horizontal-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
     }
 
-    .card {
-      flex: 0 0 auto;
-      width: 200px;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      padding: 15px;
-      border-radius: 15px;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.2s;
+    /* Stream de novidades */
+    .news-stream {
+      background: linear-gradient(45deg, #f8fafc 0%, #f1f5f9 100%);
+      animation: float 6s ease-in-out infinite;
     }
-
-    .card:hover {
-      transform: scale(1.05);
-    }
-
-    /* Menu Sanduíche */
-    .menu-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      cursor: pointer;
-      z-index: 1001;
-    }
-
-    .menu-btn div {
-      width: 30px;
-      height: 4px;
-      background: #f8fafc;
-      margin: 6px 0;
-      border-radius: 2px;
-    }
-
-    .side-menu {
-      position: fixed;
-      top: 0;
-      left: -250px;
-      width: 250px;
-      height: 100%;
-      background: rgba(15, 23, 42, 0.95);
-      padding-top: 60px;
-      transition: 0.3s;
-      z-index: 1000;
-    }
-
-    .side-menu.active {
-      left: 0;
-    }
-
-    .side-menu ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .side-menu ul li {
-      padding: 15px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .side-menu ul li a {
-      color: #f8fafc;
-      text-decoration: none;
-      display: block;
-    }
-
-    .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      opacity: 0;
-      visibility: hidden;
-      transition: 0.3s;
-      z-index: 999;
-    }
-
-    .overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .socials {
-      margin-top: 20px;
-    }
-
-    .socials a {
-      margin: 0 10px;
-      color: #38bdf8;
-      text-decoration: none;
-      font-size: 1.2rem;
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
     }
   </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800">
+  <!-- Banner -->
+  <header class="bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 p-4 md:p-6 text-center shadow-md">
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-700">Affiliate Smart Site</h1>
+    <p class="text-sm md:text-base text-gray-600">Ofertas personalizadas e recomendações inteligentes</p>
+  </header>
 
-  <!-- Botão Menu Sanduíche -->
-  <div class="menu-btn" id="menuBtn">
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-
-  <!-- Menu Lateral -->
-  <div class="side-menu" id="sideMenu">
-    <ul>
-      <li><a href="#">Início</a></li>
-      <li><a href="#">Categorias</a></li>
-      <li><a href="#">Ofertas</a></li>
-      <li><a href="#">Contato</a></li>
-    </ul>
-  </div>
-
-  <!-- Overlay -->
-  <div class="overlay" id="overlay"></div>
-
-  <!-- Conteúdo Principal -->
-  <div class="container">
-    <div class="search-box">
-      <input type="text" placeholder="O que você procura?" />
-    </div>
-
-    <div class="categories">
-      <div class="category">
-        <div class="card">Notebook 1</div>
-        <div class="card">Notebook 2</div>
-        <div class="card">Notebook 3</div>
-      </div>
-
-      <div class="category">
-        <div class="card">Celular 1</div>
-        <div class="card">Celular 2</div>
-        <div class="card">Celular 3</div>
-      </div>
-
-      <div class="category">
-        <div class="card">Acessório 1</div>
-        <div class="card">Acessório 2</div>
-        <div class="card">Acessório 3</div>
+  <!-- Menu sanduíche -->
+  <nav class="relative">
+    <div class="p-4 flex justify-between items-center">
+      <div class="text-lg md:text-xl font-bold">Logo</div>
+      <button id="menuBtn" class="space-y-1 md:hidden">
+        <div class="w-6 h-1 bg-gray-700"></div>
+        <div class="w-6 h-1 bg-gray-700"></div>
+        <div class="w-6 h-1 bg-gray-700"></div>
+      </button>
+      <!-- Menu desktop -->
+      <div class="hidden md:flex space-x-6">
+        <a href="#" class="hover:text-blue-600 transition-colors">Início</a>
+        <a href="#" class="hover:text-blue-600 transition-colors">Categorias</a>
+        <a href="#" class="hover:text-blue-600 transition-colors">Sobre</a>
+        <a href="#" class="hover:text-blue-600 transition-colors">Contato</a>
       </div>
     </div>
-
-    <div class="socials">
-      <a href="#">Facebook</a>
-      <a href="#">Instagram</a>
-      <a href="#">Twitter</a>
+    <div id="menu" class="hidden absolute top-0 right-0 w-2/3 h-screen bg-white/95 shadow-lg p-6 z-50 md:hidden">
+      <ul class="space-y-4 text-lg">
+        <li><a href="#" class="hover:text-blue-600 transition-colors">Início</a></li>
+        <li><a href="#" class="hover:text-blue-600 transition-colors">Categorias</a></li>
+        <li><a href="#" class="hover:text-blue-600 transition-colors">Sobre</a></li>
+        <li><a href="#" class="hover:text-blue-600 transition-colors">Contato</a></li>
+      </ul>
+      <div class="mt-8 flex space-x-4">
+        <a href="#" class="text-gray-600 hover:text-blue-600">FB</a>
+        <a href="#" class="text-gray-600 hover:text-blue-600">IG</a>
+        <a href="#" class="text-gray-600 hover:text-blue-600">TT</a>
+      </div>
     </div>
-  </div>
+  </nav>
+
+  <!-- Filtro de busca -->
+  <section class="p-4 md:p-6 max-w-6xl mx-auto">
+    <h2 class="text-xl md:text-2xl font-semibold mb-4">Filtro de Busca</h2>
+    <form id="searchForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 bg-white p-4 rounded-lg shadow">
+      <input type="text" id="nome" placeholder="Nome do produto" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      <input type="text" id="descricao" placeholder="Descrição breve" class="p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      <input type="number" id="precoMin" placeholder="Preço mín." class="p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      <input type="number" id="precoMax" placeholder="Preço máx." class="p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      <button type="submit" class="col-span-full lg:col-span-4 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded transition-colors">Buscar</button>
+    </form>
+  </section>
+
+  <!-- Abas de categorias estilo pasta -->
+  <section class="max-w-7xl mx-auto p-4 md:p-6">
+    <div class="flex space-x-1 mb-0 overflow-x-auto pb-2">
+      <button class="file-tab active tab-btn px-4 md:px-6 py-3 font-medium whitespace-nowrap" data-tab="notebooks">Notebooks</button>
+      <button class="file-tab tab-btn px-4 md:px-6 py-3 font-medium whitespace-nowrap" data-tab="celulares">Celulares</button>
+      <button class="file-tab tab-btn px-4 md:px-6 py-3 font-medium whitespace-nowrap" data-tab="acessorios">Acessórios</button>
+    </div>
+
+    <!-- Painéis com rolagem horizontal -->
+    <div id="tabContent" class="bg-white rounded-lg rounded-tl-none shadow-lg p-4 md:p-6 min-h-64">
+      <!-- Notebooks -->
+      <div id="notebooks" class="tab-pane">
+        <h3 class="text-xl font-semibold mb-4">Notebooks em Destaque</h3>
+        <div class="horizontal-scroll overflow-x-auto pb-4">
+          <div class="flex space-x-4 w-max">
+            <div class="bg-white border shadow-md rounded-lg p-4 w-64 flex-shrink-0">
+              <div class="bg-gray-200 h-32 rounded mb-3"></div>
+              <h4 class="font-semibold">Notebook Dell Inspiron 15</h4>
+              <p class="text-sm text-gray-600 mb-2">Intel i5, 8GB RAM, SSD 256GB</p>
+              <p class="text-blue-600 font-bold text-lg">R$ 2.899</p>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full transition-colors">Ver Oferta</button>
+            </div>
+            <div class="bg-white border shadow-md rounded-lg p-4 w-64 flex-shrink-0">
+              <div class="bg-gray-200 h-32 rounded mb-3"></div>
+              <h4 class="font-semibold">Notebook Lenovo ThinkPad</h4>
+              <p class="text-sm text-gray-600 mb-2">Intel i7, 16GB RAM, SSD 512GB</p>
+              <p class="text-blue-600 font-bold text-lg">R$ 4.299</p>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full transition-colors">Ver Oferta</button>
+            </div>
+            <div class="bg-white border shadow-md rounded-lg p-4 w-64 flex-shrink-0">
+              <div class="bg-gray-200 h-32 rounded mb-3"></div>
+              <h4 class="font-semibold">Notebook Acer Aspire 5</h4>
+              <p class="text-sm text-gray-600 mb-2">AMD Ryzen 5, 12GB RAM, SSD 256GB</p>
+              <p class="text-blue-600 font-bold text-lg">R$ 2.199</p>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full transition-colors">Ver Oferta</button>
+            </div>
+            <div class="bg-white border shadow-md rounded-lg p-4 w-64 flex-shrink-0">
+              <div class="bg-gray-200 h-32 rounded mb-3"></div>
+              <h4 class="font-semibold">MacBook Air M2</h4>
+              <p class="text-sm text-gray-600 mb-2">Chip M2, 8GB RAM, SSD 256GB</p>
+              <p class="text-blue-600 font-bold text-lg">R$ 8.999</p>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full transition-colors">Ver Oferta</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Celulares -->
+      <div id="celulares" class="tab-pane hidden">
+        <h3 class="text-xl font-semibold mb-4">Smartphones em Promoção</h3>
+        <div class="horizontal-scroll overflow-x-auto pb-4">
+          <div class="flex space-x-4 w-max">
+            <div class="bg-white border shadow-md rounded-lg p-4 w-64 flex-shrink-0">
+              <div class="bg-gray-200 h-32 rounded mb-3"></div>
+              <h4 class="font-semibold">iPhone 14 Pro</h4>
+              <p class="text-sm text-gray-600 mb-2">128GB, Câmera ProRAW</p>
+              <p class="text-blue-600 font-bold text-lg">R$ 6.499</p>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full transition-colors">Ver Oferta</button>
+            </div>
+            <div class="bg-white border shadow-md rounded-lg p-4 w-64 flex-shrink-0">
+              <div class="bg-gray-200 h-32 rounded mb-3"></div>
+              <h4 class="font-semibold">Samsung Galaxy S23</h4>
+              <p class="text-sm text-gray-600 mb-2">256GB, Snapdragon 8 Gen 2</p>
+              <p class="text-blue-600 font-bold text-lg">R$ 3.899</p>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full transition-colors">Ver Oferta</button>
+            </div>
+            <div class="bg-white border shadow-md rounded-lg p-4 w-64 flex-shrink-0">
+              <div class="bg-gray-200 h-32 rounded mb-3"></div>
+              <h4 class="font-semibold">Xiaomi Redmi Note 12</h4>
+              <p class="text-sm text-gray-600 mb-2">128GB, Câmera 50MP</p>
+              <p class="text-blue-600 font-bold text-lg">R$ 1.299</p>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full transition-colors">Ver Oferta</button>
+            </div>
+            <div class="bg-white border shadow-md rounded-lg p-4 w-64 flex-shrink-0">
+              <div class="bg-gray-200 h-32 rounded mb-3"></div>
+              <h4 class="font-semibold">Google Pixel 7</h4>
+              <p class="text-sm text-gray-600 mb-2">128GB, Chip Google Tensor G2</p>
+              <p class="text-blue-600 font-bold text-lg">R$ 2.999</p>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full transition-colors">Ver Oferta</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acessórios -->
+      <div id="acessorios" class="tab-pane hidden">
+        <h3 class="text-xl font-semibold mb-4">Acessórios Indispensáveis</h3>
+        <div class="horizontal-scroll overflow-x-auto pb-4">
+          <div class="flex space-x-4 w-max">
+            <div class="bg-white border shadow-md rounded-lg p-4 w-64 flex-shrink-0">
+              <div class="bg-gray-200 h-32 rounded mb-3"></div>
+              <h4 class="font-semibold">Headset Gamer HyperX</h4>
+              <p class="text-sm text-gray-600 mb-2">Som 7.1, Microfone destacável</p>
+              <p class="text-blue-600 font-bold text-lg">R$ 399</p>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full transition-colors">Ver Oferta</button>
+            </div>
+            <div class="bg-white border shadow-md rounded-lg p-4 w-64 flex-shrink-0">
+              <div class="bg-gray-200 h-32 rounded mb-3"></div>
+              <h4 class="font-semibold">Mouse Gamer Logitech</h4>
+              <p class="text-sm text-gray-600 mb-2">12000 DPI, RGB, Wireless</p>
+              <p class="text-blue-600 font-bold text-lg">R$ 249</p>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full transition-colors">Ver Oferta</button>
+            </div>
+            <div class="bg-white border shadow-md rounded-lg p-4 w-64 flex-shrink-0">
+              <div class="bg-gray-200 h-32 rounded mb-3"></div>
+              <h4 class="font-semibold">Teclado Mecânico RGB</h4>
+              <p class="text-sm text-gray-600 mb-2">Switch Blue, Anti-ghosting</p>
+              <p class="text-blue-600 font-bold text-lg">R$ 179</p>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full transition-colors">Ver Oferta</button>
+            </div>
+            <div class="bg-white border shadow-md rounded-lg p-4 w-64 flex-shrink-0">
+              <div class="bg-gray-200 h-32 rounded mb-3"></div>
+              <h4 class="font-semibold">Webcam 4K Logitech</h4>
+              <p class="text-sm text-gray-600 mb-2">Ultra HD, Autofoco, Microfone</p>
+              <p class="text-blue-600 font-bold text-lg">R$ 899</p>
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-2 w-full transition-colors">Ver Oferta</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção de Novidades e Dicas tipo Stream -->
+  <section class="news-stream p-6 md:p-8 mt-12 border-t-2 border-blue-100">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-2xl md:text-3xl font-bold text-center mb-8 text-gray-700">
+        <span class="inline-block mr-2">📱</span>
+        Novidades & Dicas de Compra
+        <span class="inline-block ml-2">💡</span>
+      </h2>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+          <div class="flex items-center mb-3">
+            <span class="text-2xl mr-3">🔥</span>
+            <h3 class="font-semibold text-lg">Black Friday Antecipada</h3>
+          </div>
+          <p class="text-gray-600 text-sm mb-3">
+            Descontos de até 70% em eletrônicos! Não perca as melhores ofertas do ano. 
+            Cadastre-se para receber alertas exclusivos das promoções.
+          </p>
+          <span class="text-blue-500 text-xs font-medium">#Promoção #Desconto</span>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+          <div class="flex items-center mb-3">
+            <span class="text-2xl mr-3">💳</span>
+            <h3 class="font-semibold text-lg">Dica: Parcelamento Inteligente</h3>
+          </div>
+          <p class="text-gray-600 text-sm mb-3">
+            Compare sempre o valor à vista vs parcelado. Muitas vezes o desconto à vista 
+            compensa mais que parcelar sem juros. Use nossa calculadora!
+          </p>
+          <span class="text-green-500 text-xs font-medium">#Dica #Economia</span>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+          <div class="flex items-center mb-3">
+            <span class="text-2xl mr-3">⭐</span>
+            <h3 class="font-semibold text-lg">Produto da Semana</h3>
+          </div>
+          <p class="text-gray-600 text-sm mb-3">
+            O iPhone 14 Pro está com o melhor preço dos últimos 6 meses. 
+            Histórico de preços mostra economia de R$ 800 comparado ao mês passado.
+          </p>
+          <span class="text-purple-500 text-xs font-medium">#Recomendação #iPhone</span>
+        </div>
+      </div>
+
+      <div class="text-center mt-8">
+        <button class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-all transform hover:scale-105">
+          Ver Todas as Novidades
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rodapé -->
+  <footer class="bg-gray-800 text-gray-300 p-6 md:p-8 mt-12">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
+      <div>
+        <h4 class="font-semibold mb-3 text-white">Affiliate Smart Site</h4>
+        <p class="text-sm">As melhores ofertas e recomendações personalizadas para você economizar nas suas compras online.</p>
+      </div>
+      <div>
+        <h5 class="font-medium mb-3 text-white">Links Rápidos</h5>
+        <ul class="space-y-1 text-sm">
+          <li><a href="#" class="hover:text-blue-400 transition-colors">Ofertas do Dia</a></li>
+          <li><a href="#" class="hover:text-blue-400 transition-colors">Comparar Preços</a></li>
+          <li><a href="#" class="hover:text-blue-400 transition-colors">Cupons de Desconto</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-medium mb-3 text-white">Siga-nos</h5>
+        <div class="flex justify-center md:justify-start space-x-4">
+          <a href="#" class="hover:text-blue-400 transition-colors">Facebook</a>
+          <a href="#" class="hover:text-blue-400 transition-colors">Instagram</a>
+          <a href="#" class="hover:text-blue-400 transition-colors">Twitter</a>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-600 mt-6 pt-4 text-center text-sm">
+      © 2025 Affiliate Smart Site. Todos os direitos reservados.
+    </div>
+  </footer>
 
   <script>
-    const menuBtn = document.getElementById('menuBtn');
-    const sideMenu = document.getElementById('sideMenu');
-    const overlay = document.getElementById('overlay');
-
-    menuBtn.addEventListener('click', () => {
-      sideMenu.classList.toggle('active');
-      overlay.classList.toggle('active');
+    // Funcionalidade das abas com estilo pasta
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active de todas as abas
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabPanes.forEach(p => p.classList.add('hidden'));
+        
+        // Ativa a aba clicada
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.remove('hidden');
+      });
     });
 
-    overlay.addEventListener('click', () => {
-      sideMenu.classList.remove('active');
-      overlay.classList.remove('active');
+    // Menu sanduíche responsivo
+    const menuBtn = document.getElementById('menuBtn');
+    const menu = document.getElementById('menu');
+    
+    menuBtn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+    
+    document.addEventListener('click', (e) => {
+      if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+        menu.classList.add('hidden');
+      }
+    });
+
+    // Sistema de busca aprimorado
+    document.getElementById('searchForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nome = document.getElementById('nome').value.toLowerCase();
+      const descricao = document.getElementById('descricao').value.toLowerCase();
+      const precoMin = parseFloat(document.getElementById('precoMin').value) || 0;
+      const precoMax = parseFloat(document.getElementById('precoMax').value) || Infinity;
+
+      const cards = document.querySelectorAll('.tab-pane .bg-white.border');
+      let encontrados = 0;
+      
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        const precoText = card.querySelector('p.text-blue-600').innerText;
+        const preco = parseFloat(precoText.replace(/[^0-9]/g, ''));
+        
+        const nomeMatch = !nome || text.includes(nome);
+        const descMatch = !descricao || text.includes(descricao);
+        const precoMatch = preco >= precoMin && preco <= precoMax;
+        
+        if (nomeMatch && descMatch && precoMatch) {
+          card.style.display = 'block';
+          encontrados++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Feedback visual da busca
+      if (encontrados === 0) {
+        alert('Nenhum produto encontrado com os critérios especificados.');
+      }
+    });
+
+    // Smooth scroll para rolagem horizontal
+    document.querySelectorAll('.horizontal-scroll').forEach(scroll => {
+      scroll.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        scroll.scrollLeft += e.deltaY;
+      });
     });
   </script>
 </body>
