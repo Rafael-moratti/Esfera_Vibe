@@ -3,180 +3,216 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Marketplace Futurista</title>
+  <title>Smart Affiliate Finder</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
-      color: #fff;
+      background: linear-gradient(to bottom right, #0f172a, #1e293b);
+      color: #f8fafc;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 15px;
-      background: rgba(0,0,0,0.6);
-      z-index: 1000;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #00f7ff;
-    }
-
-    .menu-toggle {
-      font-size: 2rem;
-      cursor: pointer;
-    }
-
-    nav {
-      display: none;
-      position: absolute;
-      right: 20px;
-      top: 60px;
-      background: rgba(0,0,0,0.8);
-      border-radius: 10px;
-      padding: 10px;
-    }
-
-    nav a {
-      display: block;
-      color: #fff;
-      text-decoration: none;
-      padding: 5px 10px;
-    }
-
-    nav a:hover {
-      background: rgba(255,255,255,0.1);
-    }
-
-    .search-box {
-      margin-top: 100px;
+    .container {
       text-align: center;
+      width: 90%;
+      max-width: 1200px;
     }
 
     .search-box input {
-      width: 300px;
-      padding: 10px;
-      border-radius: 20px;
+      width: 80%;
+      padding: 12px;
+      border-radius: 25px;
       border: none;
+      font-size: 1rem;
+      margin-bottom: 20px;
       outline: none;
-      text-align: center;
     }
 
     .categories {
       display: flex;
       flex-direction: column;
-      gap: 40px;
-      margin-top: 50px;
-      width: 90%;
-      max-width: 1200px;
+      gap: 20px;
+      overflow-y: auto;
+      height: 60vh;
+      padding: 10px;
     }
 
-    .category-row {
+    .category {
       display: flex;
       overflow-x: auto;
-      gap: 20px;
+      gap: 10px;
       padding: 10px;
-      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
     }
 
     .card {
-      flex: 0 0 250px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 15px;
-      padding: 15px;
-      text-align: center;
-      scroll-snap-align: start;
+      flex: 0 0 auto;
+      width: 200px;
+      background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
-      transition: transform 0.3s;
-      z-index: 10;
+      padding: 15px;
+      border-radius: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
 
     .card:hover {
       transform: scale(1.05);
-      border-color: #00f7ff;
     }
 
-    .card img {
-      width: 100%;
-      border-radius: 10px;
+    /* Menu Sanduíche */
+    .menu-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      cursor: pointer;
+      z-index: 1001;
     }
 
-    footer {
-      margin-top: 40px;
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9rem;
+    .menu-btn div {
+      width: 30px;
+      height: 4px;
+      background: #f8fafc;
+      margin: 6px 0;
+      border-radius: 2px;
     }
 
-    .social-icons a {
-      margin: 0 10px;
-      color: #fff;
-      font-size: 1.5rem;
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -250px;
+      width: 250px;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.95);
+      padding-top: 60px;
+      transition: 0.3s;
+      z-index: 1000;
+    }
+
+    .side-menu.active {
+      left: 0;
+    }
+
+    .side-menu ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .side-menu ul li {
+      padding: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .side-menu ul li a {
+      color: #f8fafc;
       text-decoration: none;
+      display: block;
     }
 
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+      z-index: 999;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .socials {
+      margin-top: 20px;
+    }
+
+    .socials a {
+      margin: 0 10px;
+      color: #38bdf8;
+      text-decoration: none;
+      font-size: 1.2rem;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">FuturoShop</div>
-    <div class="menu-toggle">☰</div>
-    <nav>
-      <a href="#">Início</a>
-      <a href="#">Categorias</a>
-      <a href="#">Ofertas</a>
-      <a href="#">Contato</a>
-    </nav>
-  </header>
 
-  <div class="search-box">
-    <input type="text" placeholder="🔍 O que você procura hoje?">
+  <!-- Botão Menu Sanduíche -->
+  <div class="menu-btn" id="menuBtn">
+    <div></div>
+    <div></div>
+    <div></div>
   </div>
 
-  <div class="categories">
-    <div class="category-row">
-      <div class="card"><img src="https://via.placeholder.com/200x120" alt="Produto"><h3>Notebook A</h3><p>R$ 2.499</p></div>
-      <div class="card"><img src="https://via.placeholder.com/200x120" alt="Produto"><h3>Notebook B</h3><p>R$ 3.199</p></div>
-      <div class="card"><img src="https://via.placeholder.com/200x120" alt="Produto"><h3>Notebook C</h3><p>R$ 4.099</p></div>
-    </div>
-
-    <div class="category-row">
-      <div class="card"><img src="https://via.placeholder.com/200x120" alt="Produto"><h3>Celular X</h3><p>R$ 1.299</p></div>
-      <div class="card"><img src="https://via.placeholder.com/200x120" alt="Produto"><h3>Celular Y</h3><p>R$ 1.899</p></div>
-      <div class="card"><img src="https://via.placeholder.com/200x120" alt="Produto"><h3>Celular Z</h3><p>R$ 2.599</p></div>
-    </div>
+  <!-- Menu Lateral -->
+  <div class="side-menu" id="sideMenu">
+    <ul>
+      <li><a href="#">Início</a></li>
+      <li><a href="#">Categorias</a></li>
+      <li><a href="#">Ofertas</a></li>
+      <li><a href="#">Contato</a></li>
+    </ul>
   </div>
 
-  <footer>
-    <div class="social-icons">
-      <a href="#">🌐</a>
-      <a href="#">📘</a>
-      <a href="#">🐦</a>
-      <a href="#">📸</a>
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Conteúdo Principal -->
+  <div class="container">
+    <div class="search-box">
+      <input type="text" placeholder="O que você procura?" />
     </div>
-    <p>&copy; 2025 FuturoShop - Todos os direitos reservados</p>
-  </footer>
+
+    <div class="categories">
+      <div class="category">
+        <div class="card">Notebook 1</div>
+        <div class="card">Notebook 2</div>
+        <div class="card">Notebook 3</div>
+      </div>
+
+      <div class="category">
+        <div class="card">Celular 1</div>
+        <div class="card">Celular 2</div>
+        <div class="card">Celular 3</div>
+      </div>
+
+      <div class="category">
+        <div class="card">Acessório 1</div>
+        <div class="card">Acessório 2</div>
+        <div class="card">Acessório 3</div>
+      </div>
+    </div>
+
+    <div class="socials">
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
+      <a href="#">Twitter</a>
+    </div>
+  </div>
 
   <script>
-    const menuToggle = document.querySelector('.menu-toggle');
-    const nav = document.querySelector('nav');
-    menuToggle.addEventListener('click', () => {
-      nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
+    const menuBtn = document.getElementById('menuBtn');
+    const sideMenu = document.getElementById('sideMenu');
+    const overlay = document.getElementById('overlay');
+
+    menuBtn.addEventListener('click', () => {
+      sideMenu.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+
+    overlay.addEventListener('click', () => {
+      sideMenu.classList.remove('active');
+      overlay.classList.remove('active');
     });
   </script>
 </body>
